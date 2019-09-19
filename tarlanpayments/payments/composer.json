@@ -1,0 +1,30 @@
+{
+    "name": "tarlanpayments/payments",
+    "description": "payment gateway",
+    "authors": [
+        {
+            "name": "Namazbek Bekarysuly",
+            "email": "namazbek.bekarysuly@tarlanpayments.kz"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+
+    },
+
+    "extra": {
+        "laravel": {
+            "providers": [
+                "tarlanpayments\\payments\\PaymentServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "classmap": [
+            "src/config"
+        ],
+        "psr-4": {
+            "TarlanPayments\\Payments\\": "src/"
+        }
+    }
+}
