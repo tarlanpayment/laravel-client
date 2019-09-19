@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
  * Class BasicAuth
  * @package packages\tarlanpayments\payments\src
  */
-class BasicAuth extends  TarlanPay
+class PaymentCreate extends  TarlanPay
 {
 
     public function __construct($params)
@@ -19,11 +19,13 @@ class BasicAuth extends  TarlanPay
         parent::__construct();
 
         $this->request_url      = $params('request_url');
+        $this->back_url         = $params('back_url');
         $this->reference_id     = $params['reference_id'] ?? null;
         $this->amount           = $params['amount'] ?? 0;
         $this->user_id          = $params['user_id'];
         $this->user_email       = $params['user_email'] ?? '';
-        $this->hashed_key       =password_hash(
+        $this->description      = $params['description'] ?? '';
+        $this->hashed_key       = password_hash(
             $this->reference_id.$this->secret_key,
             PASSWORD_BCRYPT,
             ['cost' => 10]

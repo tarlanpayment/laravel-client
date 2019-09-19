@@ -2,10 +2,6 @@
 return [
     'pay_test_mode' => true,
 
-    'SECRET_KEY'        => '',
-    'MERCHANT_ID'       => '',
-    'BACK_URL'          => '',
-    'REQUEST_URL'       => '',
-    'DESCRIPTION'       => '',
-    'EPAY_SERVER_URL'   => ''
+    'secret_key'        => env('SECRET_KEY', 'qrR-QrHMbIQNZCLGzFldkqxXJ9Bzjl0f'),
+    'merchant_id'       => env('MERCHANT_ID', '4'),
 ];

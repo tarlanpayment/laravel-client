@@ -68,36 +68,51 @@ class TarlanPay
     private function setTestParams()
     {
         $this->merchant_id      = '4';
-        $this->back_url         = config('tarlanpayment.BACK_URL');
         $this->secret_key       = 'qrR-QrHMbIQNZCLGzFldkqxXJ9Bzjl0f';
 
     }
 
     private function setProductionParams()
     {
-        $this->merchant_id      = config('tarlanpayment.MERCHANT_ID');
-        $this->back_url         = config('tarlanpayment.BACK_URL');
-        $this->secret_key       = config('tarlanpayment.SECRET_KEY');
+        $this->merchant_id      = config('tarlanpayment.merchant_id');
+        $this->secret_key       = config('tarlanpayment.secret_key');
 
     }
 
     /**
      * @param $params
-     * @return BasicAuth
+     * @return PaymentCreate
      */
-    public function basicAuth($params)
+    public function paymentCreate($params)
     {
-        return new BasicAuth($params);
+        return new PaymentCreate($params);
     }
 
     /**
      * @param $params
-     * @return CheckPay
+     * @return PaymentStatus
      */
-    public function checkPay($params)
+    public function paymentStatus($params)
     {
-        return new CheckPay($params);
+        return new PaymentStatus($params);
     }
 
+    /**
+     * @param $url
+     * @return mixed
+     */
+    public function request($url)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url); // set url to post to
+        curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);// allow redirects
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return into a variable
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->request_timeout); // times out after 4s
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+        $result = curl_exec($ch); // run the whole process
+        curl_close($ch);
+        return $result;
+    }
 
 }

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
  * Class CheckPay
  * @package packages\TarlanPayments\Payments\src
  */
-class CheckPay extends TarlanPay
+class PaymentStatus extends TarlanPay
 {
 
     /**
