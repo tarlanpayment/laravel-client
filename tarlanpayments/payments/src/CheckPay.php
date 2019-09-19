@@ -1,23 +1,14 @@
 <?php
 namespace TarlanPayments\Payments;
 
+use Illuminate\Support\Facades\Validator;
+
 /**
  * Class CheckPay
  * @package packages\TarlanPayments\Payments\src
  */
-class CheckPay
+class CheckPay extends TarlanPay
 {
-    /**
-     * @var
-     */
-    public $epay_url_server;
-
-    /**
-     * @var
-     */
-    public $transaction_ids;
-
-
 
     /**
      * CheckPay constructor.
@@ -25,8 +16,8 @@ class CheckPay
      */
     public function __construct($params)
     {
-        $this->epay_url_server = 'https://api.tarlanpayments.kz';
-        $this->transaction_ids = $params['transaction_ids'] ?? null;
+        parent::__construct();
+        $this->transaction_ids   = $params['transaction_ids'] ?? null;
     }
 
     /**
@@ -55,7 +46,7 @@ class CheckPay
 
         $queryString = http_build_query( $params->to_array() );
 
-        $url = $this->epay_url_server. '/payment/status?' . $queryString;
+        $url = $this->tarlan_server. '/payment/status?' . $queryString;
 
         return $url;
     }

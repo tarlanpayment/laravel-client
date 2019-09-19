@@ -2,78 +2,32 @@
 namespace TarlanPayments\Payments;
 
 use Illuminate\Support\Facades\Validator;
+
 /**
  * Class BasicAuth
  * @package packages\tarlanpayments\payments\src
  */
-class BasicAuth {
-    /**
-     * @var
-     */
-    public $epay_url_server;
-    /**
-     * @var
-     */
-    public $merchant_id;
-    /**
-     * @var
-     */
-    public $amount;
-    /**
-     * @var
-     */
-    public $description;
-    /**
-     * @var
-     */
-    public $back_url;
-    /**
-     * @var
-     */
-    public $request_url;
-    /**
-     * @var
-     */
-    public $reference_id;
-    /**
-     * @var
-     */
-    public $secret_key;
-    /**
-     * @var
-     */
-    public $user_id;
-    /**
-     * @var
-     */
-    public $is_test;
-    /**
-     * @var
-     */
-    public $user_email;
-    /**
-     * @var
-     */
-    public $currency;
-    /**
-     * @param array $params
-     */
+class BasicAuth extends  TarlanPay
+{
+
     public function __construct($params)
     {
-        $this->epay_url_server  = 'https://api.tarlanpayments.kz';
-        $this->merchant_id      = config('tarlanpayment.MERCHANT_ID');
-        $this->back_url         = config('tarlanpayment.BACK_URL');
-        $this->description      = config('tarlanpayment.MERCHANT_ID');
-        $secret_key = $params['reference_id'] . config('tarlanpayment.SECRET_KEY');
-        $options = ['const' => 10];
-        $this->secret_key       = password_hash($secret_key, PASSWORD_BCRYPT, $options);
-        $this->currency         = $params['currency'] ?? $this->currency;
+        /**
+         * BasicPay constructor.
+         * @param array $params
+         */
+        parent::__construct();
 
         $this->request_url      = $params('request_url');
         $this->reference_id     = $params['reference_id'] ?? null;
         $this->amount           = $params['amount'] ?? 0;
         $this->user_id          = $params['user_id'];
         $this->user_email       = $params['user_email'] ?? '';
+        $this->hashed_key       =password_hash(
+            $this->reference_id.$this->secret_key,
+            PASSWORD_BCRYPT,
+            ['cost' => 10]
+        );
     }
 
     /**
@@ -91,7 +45,7 @@ class BasicAuth {
                 'amount'         => $this->amount,
                 'merchant_id'    => $this->merchant_id,
                 'user_id'        => $this->user_id,
-                'secret_key'     => $this->secret_key,
+                'hashed_key'     => $this->secret_key,
                 'user_email'     => $this->user_email
             ]
         );
@@ -101,7 +55,7 @@ class BasicAuth {
                 'amount'         => 'required',
                 'merchant_id'    => 'required',
                 'reference_id'   => 'required',
-                'sectet_key'     => 'required',
+                'hashed_key'     => 'required',
                 'request_url'    => 'required',
                 'back_url'       => 'required',
                 'description'    => 'max:512|required',
@@ -123,13 +77,13 @@ class BasicAuth {
             'amount',
             'merchant_id',
             'user_id',
-            'secret_key',
+            'hashed_key',
             'user_email'
         ])->toArray();
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $this->epay_url_server . 'invoice/create');
+        curl_setopt($ch, CURLOPT_URL, $this->tarlan_server . 'invoice/create');
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $paramsArray);
 

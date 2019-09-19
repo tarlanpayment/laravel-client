@@ -21,7 +21,8 @@
     },
     "autoload": {
         "classmap": [
-            "src/config"
+            "src/config",
+            "src/Facades"
         ],
         "psr-4": {
             "TarlanPayments\\Payments\\": "src/"

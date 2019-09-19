@@ -2,7 +2,9 @@
 
 namespace TarlanPayments\Payments;
 
+use TarlanPayments\Payments\Facades\TarlanPay as TarlanPayFacade;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\AliasLoader;
 
 class PaymentServiceProvider extends ServiceProvider
 {
@@ -13,7 +15,13 @@ class PaymentServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $loader = AliasLoader::getInstance();
+        $loader->alias('Crud', TarlanPayFacade::class);
 
+        $this->app->singleton("tarlanpay", function($app)
+        {
+            return new TarlanPay();
+        });
     }
 
     /**
