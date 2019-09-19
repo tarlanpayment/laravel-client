@@ -49,7 +49,7 @@ $pay->generateUrl();
 ```php
 $checkPay = TarlanPay::paymentStatus( [ 'reference_id' => '11111111' ] );
 
-$response = Epay::request( $checkPay->generateUrl() );
+$response = TaralanPay::request( $checkPay->generateUrl() );
 ```
 
 ## Epay responses
