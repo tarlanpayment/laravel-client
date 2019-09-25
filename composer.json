@@ -1,5 +1,5 @@
 {
-    "name": "tarlanpayments/payments",
+    "name": "tarlanpayment/payments",
     "description": "payment gateway",
     "license": "MIT",
     "authors": [
