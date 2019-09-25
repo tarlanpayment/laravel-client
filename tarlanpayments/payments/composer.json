@@ -1,6 +1,7 @@
 {
     "name": "tarlanpayments/payments",
     "description": "payment gateway",
+    "license": "MIT",
     "authors": [
         {
             "name": "Namazbek Bekarysuly",
@@ -15,7 +16,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "tarlanpayments\\payments\\PaymentServiceProvider"
+                "TarlanPayments\\Payments\\PaymentServiceProvider"
             ]
         }
     },
