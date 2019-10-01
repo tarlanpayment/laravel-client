@@ -17,10 +17,6 @@ class PaymentStatusResponse
     const STATUS_REFUND = 5;
     const STATUS_FAILED = 6;
 
-    const VALIDATION_ERROR = 101;
-    const UNAUTHORIZED_ERROR = 102;
-    const SYSTEM_ERROR = 103;
-
     protected $success;
     protected $data;
     protected $message;

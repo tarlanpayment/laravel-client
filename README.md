@@ -80,4 +80,13 @@ $obj = TarlanPay::paymentStatus( request()->all() );
            Log::info('data='.$checkPaymentResponse->getData());
            Log::info('error_code='.$checkPaymentResponse->getErrorCode());
        }
+
+Payment status:
+    const STATUS_NEW = 0;
+    const STATUS_OK = 1;
+    const STATUS_PROCESS = 2;
+    const STATUS_AUTHORIZED = 3;
+    const STATUS_CANCELED = 4;
+    const STATUS_REFUND = 5;
+    const STATUS_FAILED = 6;
 ```
