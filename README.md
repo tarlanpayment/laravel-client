@@ -30,7 +30,7 @@ composer require tarlanpayments/payments
 
 ## TarlanPay requests
 
-### Basic auth pay example
+### Invoice create example
 ```php
 $pay =  TarlanPay::paymentCreate([
               'secret_key' => reference_id+secret_key,
@@ -45,7 +45,7 @@ $pay =  TarlanPay::paymentCreate([
 $pay->generateUrl();
 ```
 
-### Check pay example
+### Payment status check example
 ```php
 $checkPay = TarlanPay::paymentStatus( [ 'reference_id' => '11111111' ] );
 
@@ -53,3 +53,31 @@ $response = TaralanPay::request( $checkPay->generateUrl() );
 ```
 
 ## Epay responses
+### Payment Create BACK_LINK response handling example 
+```php
+ $jsonResponse = request('json');
+
+        if($jsonResponse)
+        {
+            $payResponse = TarlanPay::handlePaymentCreate($jsonResponse);
+
+            Log::info( 'transaction_id='.$payResponse->getTransactionId() );
+            Log::info( 'status='.$payResponse->getStatus() );
+            Log::info( 'reference_id='.$payResponse->getReferenceId() );
+        }
+```
+### Payment Status response handling example 
+```php
+$obj = TarlanPay::paymentStatus( request()->all() );
+       $response = TarlanPay::request( $obj->generateUrl() );
+
+       if($response) {
+           $checkPaymentResponse = TarlanPay::handlePaymentStatusResponse( $response );
+           dd($checkPaymentResponse->getData());
+
+           Log::info('status='.$checkPaymentResponse->getData());
+           Log::info('message='.$checkPaymentResponse->getMessage());
+           Log::info('data='.$checkPaymentResponse->getData());
+           Log::info('error_code='.$checkPaymentResponse->getErrorCode());
+       }
+```

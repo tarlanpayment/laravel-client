@@ -1,11 +1,11 @@
 <?php
-namespace TarlanPayments\Payments;
+namespace TarlanPayment\Payments;
 
 use Illuminate\Support\Facades\Validator;
 
 /**
- * Class CheckPay
- * @package packages\TarlanPayments\Payments\src
+ * Class PaymentStatus
+ * @package TarlanPayment\Payments
  */
 class PaymentStatus extends TarlanPay
 {
@@ -17,11 +17,11 @@ class PaymentStatus extends TarlanPay
     public function __construct($params)
     {
         parent::__construct();
-        $this->transaction_ids   = $params['transaction_ids'] ?? null;
+        $this->transaction_ids = $params['transaction_ids'] ?? null;
     }
 
     /**
-     * generete url for to get epay status
+     * generete url for to get epay status api
      * @return string|array
      */
     public function generateUrl()
@@ -44,11 +44,12 @@ class PaymentStatus extends TarlanPay
             return $validator->errors();
         }
 
-        $queryString = http_build_query( $params->to_array() );
+
+
+        $queryString = http_build_query($params->toArray());
 
         $url = $this->tarlan_server. '/payment/status?' . $queryString;
 
         return $url;
     }
 }
-

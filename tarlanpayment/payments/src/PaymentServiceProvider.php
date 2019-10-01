@@ -1,20 +1,24 @@
 <?php
 
-namespace TarlanPayments\Payments;
+namespace TarlanPayment\Payments;
 
-use TarlanPayments\Payments\Facades\TarlanPay as TarlanPayFacade;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
+use Illuminate\Support\ServiceProvider;
+use TarlanPayment\Payments\Facades\TarlanPay as TarlanPayFacade;
 
 class PaymentServiceProvider extends ServiceProvider
 {
     /**
-     * Register the application services.
+     * Register services.
      *
      * @return void
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__ . '/config/tarlanpayment.php', 'tarlanpayment'
+        );
+
         $loader = AliasLoader::getInstance();
         $loader->alias('Crud', TarlanPayFacade::class);
 
@@ -32,11 +36,7 @@ class PaymentServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/config/tarlanpayment.php' => config_path('tarlanpayment.php'),
+            __DIR__ . '/config/tarlanpayment.php' => config_path('tarlanpayment.php'),
         ]);
-
-        $this->mergeConfigFrom(
-            __DIR__.'/config/tarlanpayment.php', 'tarlanpayment'
-        );
     }
 }

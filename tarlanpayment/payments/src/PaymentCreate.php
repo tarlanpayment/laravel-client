@@ -1,11 +1,11 @@
 <?php
-namespace TarlanPayments\Payments;
+namespace TarlanPayment\Payments;
 
 use Illuminate\Support\Facades\Validator;
 
 /**
- * Class BasicAuth
- * @package packages\tarlanpayments\payments\src
+ * Class PaymentCreate
+ * @package TarlanPayment\Payments
  */
 class PaymentCreate extends  TarlanPay
 {
@@ -18,8 +18,8 @@ class PaymentCreate extends  TarlanPay
          */
         parent::__construct();
 
-        $this->request_url      = $params('request_url');
-        $this->back_url         = $params('back_url');
+        $this->request_url      = $params['request_url'];
+        $this->back_url         = $params['back_url'];
         $this->reference_id     = $params['reference_id'] ?? null;
         $this->amount           = $params['amount'] ?? 0;
         $this->user_id          = $params['user_id'];
@@ -47,8 +47,9 @@ class PaymentCreate extends  TarlanPay
                 'amount'         => $this->amount,
                 'merchant_id'    => $this->merchant_id,
                 'user_id'        => $this->user_id,
-                'hashed_key'     => $this->secret_key,
-                'user_email'     => $this->user_email
+                'secret_key'     => $this->hashed_key,
+                'user_email'     => $this->user_email,
+                'is_test'        => $this->is_test
             ]
         );
 
@@ -57,12 +58,14 @@ class PaymentCreate extends  TarlanPay
                 'amount'         => 'required',
                 'merchant_id'    => 'required',
                 'reference_id'   => 'required',
-                'hashed_key'     => 'required',
+                'secret_key'     => 'required',
                 'request_url'    => 'required',
                 'back_url'       => 'required',
                 'description'    => 'max:512|required',
                 'user_id'        => 'numeric|required',
-                'user_email'     => 'email|nullable'
+                'user_email'     => 'email|nullable',
+                'is_test'        => 'required'
+
             ]
         );
 
@@ -79,25 +82,24 @@ class PaymentCreate extends  TarlanPay
             'amount',
             'merchant_id',
             'user_id',
-            'hashed_key',
-            'user_email'
+            'secret_key',
+            'is_test'
         ])->toArray();
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $this->tarlan_server . 'invoice/create');
+        curl_setopt($ch,CURLOPT_URL, 'https://api.tarlanpayments.kz/invoice/create');
         curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $paramsArray);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
 
-        $response = json_decode(curl_exec($ch));
+        curl_close($ch);
+        $response = \json_decode($response, true);
 
-        curl_close ($ch);
-
-        if($response['success'])
-        {
-            return $response['redirect_url'];
-        }
-
+        return $response['data']['redirect_url'];
     }
-
 }
+
+

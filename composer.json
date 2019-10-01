@@ -1,5 +1,5 @@
 {
-    "name": "tarlanpayment/payments",
+    "name": "tarlanpayments/payments",
     "description": "payment gateway",
     "license": "MIT",
     "authors": [
@@ -16,7 +16,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "TarlanPayments\\Payments\\PaymentServiceProvider"
+                "TarlanPayment\\Payments\\PaymentServiceProvider"
             ]
         }
     },
@@ -26,7 +26,7 @@
             "src/Facades"
         ],
         "psr-4": {
-            "TarlanPayments\\Payments\\": "src/"
+            "TarlanPayment\\Payments\\": "src/"
         }
     }
 }

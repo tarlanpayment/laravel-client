@@ -1,6 +1,10 @@
 <?php
+namespace TarlanPayment\Payments;
 
-namespace TarlanPayments\Payments;
+use TarlanPayment\Payments\PaymentCreateResponse;
+use TarlanPayment\Payments\PaymentStatusResponse;
+use TarlanPayment\Payments\PaymentCreate;
+use TarlanPayment\Payments\PaymentStatus;
 
 class TarlanPay
 {
@@ -56,45 +60,57 @@ class TarlanPay
      * @var
      */
     public $transaction_ids;
+    /**
+     * @var
+     */
+    public $is_test;
 
     /**
      * @param array $params
      */
     public function __construct()
     {
+
         config('tarlanpayment.pay_test_mode', true) ? $this->setTestParams() : $this->setProductionParams();
     }
 
     private function setTestParams()
     {
-        $this->merchant_id      = '4';
-        $this->secret_key       = 'qrR-QrHMbIQNZCLGzFldkqxXJ9Bzjl0f';
 
+        $this->is_test = true;
+        $this->merchant_id      = 4;
+        $this->secret_key       = 'qrR-QrHMbIQNZCLGzFldkqxXJ9Bzjl0f';
     }
 
     private function setProductionParams()
     {
+
         $this->merchant_id      = config('tarlanpayment.merchant_id');
         $this->secret_key       = config('tarlanpayment.secret_key');
-
     }
 
-    /**
-     * @param $params
-     * @return PaymentCreate
-     */
     public function paymentCreate($params)
     {
+
         return new PaymentCreate($params);
     }
 
-    /**
-     * @param $params
-     * @return PaymentStatus
-     */
     public function paymentStatus($params)
     {
+
         return new PaymentStatus($params);
+    }
+
+    public function handlePaymentCreateResponse($rawResponse)
+    {
+
+        return new PaymentCreateResponse($rawResponse);
+    }
+
+    public function handlePaymentStatusResponse($rawResponse)
+    {
+
+        return new PaymentStatusResponse($rawResponse);
     }
 
     /**
@@ -103,16 +119,15 @@ class TarlanPay
      */
     public function request($url)
     {
+
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url); // set url to post to
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_FAILONERROR, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);// allow redirects
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return into a variable
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->request_timeout); // times out after 4s
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-        $result = curl_exec($ch); // run the whole process
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
+        $result = curl_exec($ch);
         curl_close($ch);
         return $result;
     }
-
 }
